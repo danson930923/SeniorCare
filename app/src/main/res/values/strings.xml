@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SeniorCare</string>
+    <!-- Main Activity -->
+    <string name="welcome_msg">Welcome to Senior Care</string>
+    <string name="login_btn">Login</string>
+    <string name="register_btn">Register</string>
+
+    <!-- Auth Activity-->
+    <string name="username_txt">Username: </string>
+    <string name="password_txt">Password: </string>
+    <string name="user_type_text">Please select user type:</string>
+    <string name="general_radio">General</string>
+    <string name="senior_radio">Senior</string>
+    <string name="next_button">Next</string>
+
+    <!-- QR Activity -->
+    <string name="qr_instruction">Please scan the QR code to register him/her:</string>
+
+    <!-- Menu Activity -->
+    <string name="menu_title">Menu</string>
+</resources>
