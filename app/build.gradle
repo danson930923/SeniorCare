@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.example.seniorcare"
-        minSdkVersion 15
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -17,6 +17,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/NOTICE.md'
+        exclude 'META-INF/LICENSE.md'
+        pickFirst 'META-INF/io.netty.versions.properties'
+    }
+    compileOptions {
+        targetCompatibility = 1.8
+        sourceCompatibility = 1.8
+    }
 }
 
 dependencies {
@@ -27,4 +37,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.azure:azure-cosmos:4.0.0-preview.1'
 }

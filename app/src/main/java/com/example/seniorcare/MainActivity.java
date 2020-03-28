@@ -22,8 +22,10 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         login = (Button) findViewById(R.id.loginButton);
         register = (Button) findViewById(R.id.registerButton);
 
-        login.setOnClickListener(this);
-        register.setOnClickListener(this);
+//        Intent authIntent = new Intent(this, GoogleMapsActivity.class);
+//        startActivity(authIntent);
+//        login.setOnClickListener(this);
+//        register.setOnClickListener(this);
     }
 
     @Override

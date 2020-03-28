@@ -1,4 +1,4 @@
-package db.context.sqlite.local;
+package seniorcare.db.sqlite.local;
 
 public class Constants {
     public static String DATABASE_NAME = "local-db";

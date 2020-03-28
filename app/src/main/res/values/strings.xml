@@ -18,4 +18,17 @@
 
     <!-- Menu Activity -->
     <string name="menu_title">Menu</string>
+
+    <!-- General Menu Activity -->
+    <string-array name="general_menu_list_items">
+        <item>View Senior Location</item>
+        <item>Notification List</item>
+    </string-array>
+
+    <!-- Set Notification Activity-->
+    <string name="title_label">Set Title/Content</string>
+    <string name="time_label">Set Time</string>
+    <string name="senior_name_label">Senior name</string>
+    <string name="set_notice_finish_button">Finish</string>
+    <string name="title_activity_google_maps">Map</string>
 </resources>

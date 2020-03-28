@@ -19,6 +19,16 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/noticeRecycleView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/callOutButton"
+            android:layout_marginTop="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            app:srcCompat="@android:drawable/sym_action_call" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

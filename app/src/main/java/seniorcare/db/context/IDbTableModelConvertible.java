@@ -1,14 +1,14 @@
-package db.context;
+package seniorcare.db.context;
 
-import java.security.KeyPair;
 import java.util.HashMap;
 
 public interface IDbTableModelConvertible {
     String getTableName();
-    IDbKeyTypePair getPrimaryKeyType();
-    Iterable<IDbKeyTypePair> getTableColumnsKeyType();
+    String getPrimaryKey();
+    Object getPrimaryKeyValue();
+    HashMap<String, DataType> getTableColumnsKeyType();
     // key should be column name
-    void setData(Object key, Object value);
+    void setData(String key, Object value);
     // key should be column name
     HashMap<String, String> getAllData();
 }

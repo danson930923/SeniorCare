@@ -1,4 +1,4 @@
-package db.context.sqlite.local;
+package seniorcare.db.sqlite.local;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,28 +11,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import db.context.IDbKeyTypePair;
-import db.context.IDbTableModelConvertible;
-import db.context.sqlite.SqlLiteDataType;
+import seniorcare.db.context.IDbKeyTypePair;
+import seniorcare.db.context.IDbTableModelConvertible;
+import seniorcare.db.context.DataType;
 
 
 public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHelper {
     private T sample;
 
-    // for better performance
-    private HashMap<String, String> tableKeyTypeHashMap;
-
     public DbContext(Context context) {
         super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
 
         sample = getInstance();
-        tableKeyTypeHashMap = new HashMap<>();
-
-        IDbKeyTypePair primaryKeyTypePair = sample.getPrimaryKeyType();
-        tableKeyTypeHashMap.put(primaryKeyTypePair.getName(), primaryKeyTypePair.getType());
-        for(IDbKeyTypePair dbKeyTypePair : sample.getTableColumnsKeyType()) {
-            tableKeyTypeHashMap.put(dbKeyTypePair.getName(), dbKeyTypePair.getType());
-        }
     }
 
     @Override
@@ -67,7 +57,7 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
         return getDataList(cursor);
     }
 
-    public List<T> serachData(T criteria) {
+    public List<T> searchData(T criteria) {
         HashMap<String, String> allData = criteria.getAllData();
         StringBuilder selectionQueryBuilder = null;
         List<String> selectionArgs = new ArrayList<>();
@@ -80,7 +70,7 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
             if (selectionQueryBuilder == null) {
                 selectionQueryBuilder = new StringBuilder();
             } else  {
-                selectionQueryBuilder.append(" OR ");
+                selectionQueryBuilder.append(" AND ");
             }
 
             selectionQueryBuilder.append(key);
@@ -174,8 +164,19 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
         }
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(sample.getTableName(), null, selectionQueryBuilder.toString(), (String[])selectionArgs.toArray(), null, null, null);
-        return cursor.getColumnIndexOrThrow(BaseColumns._ID);
+        if (!cursor.moveToNext()) {
+            return -1;
+        }
+
+        return cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID));
     }
+
+    public T getById(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(sample.getTableName(), null, BaseColumns._ID + " = ?", new String[] { Long.toString(id) }, null, null, null);
+        List<T> dataList = getDataList(cursor);
+        return dataList.get(0);
+    };
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
@@ -200,17 +201,15 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
         queryBuilder.append(sample.getTableName());
         queryBuilder.append(" (");
 
-        IDbKeyTypePair primaryKeyTypePair = sample.getPrimaryKeyType();
-        queryBuilder.append(primaryKeyTypePair.getName());
-        queryBuilder.append(primaryKeyTypePair.getType());
-        queryBuilder.append(" PRIMARY KEY");
+        queryBuilder.append(BaseColumns._ID);
+        queryBuilder.append("INTEGER PRIMARY KEY AUTOINCREMENT");
 
-        Iterable<IDbKeyTypePair> tableColumnsKeyTypePair = sample.getTableColumnsKeyType();
-        for(IDbKeyTypePair tableColumnKeyTypePair : tableColumnsKeyTypePair) {
+        HashMap<String, DataType> tableColumnsKeyTypePair = sample.getTableColumnsKeyType();
+        for(String columnName : tableColumnsKeyTypePair.keySet()) {
             queryBuilder.append(",");
-            queryBuilder.append(tableColumnKeyTypePair.getName());
+            queryBuilder.append(columnName);
             queryBuilder.append(" ");
-            queryBuilder.append(tableColumnKeyTypePair.getType());
+            queryBuilder.append(tableColumnsKeyTypePair.get(columnName));
         }
 
         db.execSQL(queryBuilder.toString());
@@ -223,9 +222,9 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
         db.execSQL(queryBuilder.toString());
     }
 
-    private Object readCursor (Cursor cursor, String columnName, SqlLiteDataType sqlLiteDataType) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        switch(sqlLiteDataType) {
+    private Object readCursor (Cursor cursor, String columnName, DataType dataType) {
+        int columnIndex = cursor.getColumnIndexOrThrow(columnName);
+        switch(dataType) {
             case INTEGER:
                 return cursor.getInt(columnIndex);
             case TEXT:
@@ -238,16 +237,18 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
         List<T> dataList = new ArrayList<>();
         while (cursor.moveToNext()) {
             T newInstance = getInstance();
+            newInstance.setData(BaseColumns._ID, readCursor(cursor, BaseColumns._ID, DataType.INTEGER));
 
-            IDbKeyTypePair primaryKeyTypePair = newInstance.getPrimaryKeyType();
-            newInstance.setData(
-                    primaryKeyTypePair.getName(),
-                    readCursor(
-                            cursor,
-                            primaryKeyTypePair.getName(),
-                            SqlLiteDataType.valueOf(primaryKeyTypePair.getType())
-                    )
-            );
+            for (String columnName : newInstance.getTableColumnsKeyType().keySet()) {
+                newInstance.setData(
+                        columnName,
+                        readCursor(
+                                cursor,
+                                columnName,
+                                newInstance.getTableColumnsKeyType().get(columnName)
+                        )
+                );
+            }
 
             dataList.add(newInstance);
         }

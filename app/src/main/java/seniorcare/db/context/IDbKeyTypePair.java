@@ -1,4 +1,4 @@
-package db.context;
+package seniorcare.db.context;
 
 public interface IDbKeyTypePair {
     public String getName();

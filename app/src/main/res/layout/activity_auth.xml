@@ -9,39 +9,50 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/usernameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/username_txt" />
+            android:text="@string/username_txt"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
 
         <TextView
             android:id="@+id/passwordTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/password_txt" />
+            android:text="@string/password_txt"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
 
         <TextView
             android:id="@+id/userTypeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/user_type_text" />
+            android:text="@string/user_type_text"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"/>
 
         <RadioGroup
             android:id="@+id/typeRadioGroup"
@@ -53,14 +64,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/general_radio" />
+                android:text="@string/general_radio"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"/>
 
             <RadioButton
                 android:id="@+id/seniorRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/senior_radio" />
+                android:text="@string/senior_radio"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"/>
         </RadioGroup>
 
         <Button

@@ -11,23 +11,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="20dp"
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/welcomeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_msg"
+            android:layout_marginTop="200dp"
+            android:layout_marginBottom="50dp"
             android:gravity="center"
-            android:textSize="50dp"/>
+            android:text="@string/welcome_msg"
+            android:textColor="@android:color/white"
+            android:textSize="50dp" />
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             android:text="@string/login_btn"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp"/>
 
         <Button
             android:id="@+id/registerButton"
