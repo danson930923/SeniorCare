@@ -1,30 +1,15 @@
 package seniorcare.db.cosmos;
 
-import android.database.Cursor;
-import android.provider.BaseColumns;
-
-import com.azure.cosmos.ConnectionPolicy;
-import com.azure.cosmos.ConsistencyLevel;
-import com.azure.cosmos.CosmosClient;
-import com.azure.cosmos.CosmosClientBuilder;
-import com.azure.cosmos.CosmosClientException;
 import com.azure.cosmos.CosmosContainer;
 import com.azure.cosmos.CosmosContainerProperties;
-import com.azure.cosmos.CosmosContainerRequestOptions;
-import com.azure.cosmos.CosmosContainerResponse;
 import com.azure.cosmos.CosmosDatabase;
-import com.azure.cosmos.CosmosItem;
 import com.azure.cosmos.CosmosItemProperties;
 import com.azure.cosmos.CosmosItemRequestOptions;
 import com.azure.cosmos.CosmosItemResponse;
 import com.azure.cosmos.FeedOptions;
 import com.azure.cosmos.FeedResponse;
-import com.azure.cosmos.PartitionKey;
 import com.azure.cosmos.Resource;
-import com.azure.cosmos.internal.RequestOptions;
-import com.google.common.collect.Lists;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,9 +31,9 @@ public class DbContext<T extends IDbTableModelConvertible> {
     private CosmosContainer container;
     private ClientService clientService;
 
-    public DbContext(ClientService clientService) {
+    public DbContext(ClientService clientService, T sample) {
         this.clientService = clientService;
-        sample = getInstance();
+        this.sample = (T)sample.getNewInstance();
 
 
         createDatabaseIfNotExists();
@@ -126,9 +111,9 @@ public class DbContext<T extends IDbTableModelConvertible> {
         queryOptions.populateQueryMetrics(true);
 
         StringBuilder queryBuilder = null;
-        HashMap<String, String> allData = criteria.getAllData();
+        HashMap<String, Object> allData = criteria.getAllData();
         for (String key : allData.keySet()) {
-            String value = allData.get(key);
+            String value = allData.get(key).toString();
             if (value == null || value == "") {
                 continue;
             }
@@ -169,16 +154,7 @@ public class DbContext<T extends IDbTableModelConvertible> {
     }
 
     private T getInstance() {
-        Class<T> classT = null;
-
-        try {
-            return classT.newInstance();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return (T) sample.getNewInstance();
     }
 
 

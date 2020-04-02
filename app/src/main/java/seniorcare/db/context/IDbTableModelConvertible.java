@@ -10,5 +10,6 @@ public interface IDbTableModelConvertible {
     // key should be column name
     void setData(String key, Object value);
     // key should be column name
-    HashMap<String, String> getAllData();
+    HashMap<String, Object> getAllData();
+    Object getNewInstance();
 }

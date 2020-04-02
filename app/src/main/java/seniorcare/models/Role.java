@@ -10,7 +10,7 @@ import seniorcare.db.context.DbKeyTypePair;
 import seniorcare.db.context.DataType;
 
 public class Role implements IDbTableModelConvertible {
-    private HashMap<String, Object> _data;
+    private HashMap<String, Object> _data = new HashMap<>();
     private final static String TABLE = "Role";
     private final static String COLUMN_ROLE_NAME = "RoleName";
 
@@ -57,7 +57,12 @@ public class Role implements IDbTableModelConvertible {
     }
 
     @Override
-    public HashMap<String, String> getAllData() {
-        return null;
+    public HashMap<String, Object> getAllData() {
+        return _data;
+    }
+
+    @Override
+    public Object getNewInstance() {
+        return new Role();
     }
 }

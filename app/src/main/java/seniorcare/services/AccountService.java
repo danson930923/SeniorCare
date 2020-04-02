@@ -15,7 +15,7 @@ public class AccountService {
     }
 
     public boolean register(User user) {
-        DbContext<User> userDbContext = new DbContext<>(context);
+        DbContext<User> userDbContext = new DbContext<>(context, new User());
 
         User searchUser = new User();
         searchUser.setName(user.getName());
@@ -28,7 +28,7 @@ public class AccountService {
     }
 
     public long login(User user) {
-        DbContext<User> userDbContext = new DbContext<>(context);
+        DbContext<User> userDbContext = new DbContext<>(context, new User());
         return userDbContext.getId(user);
     }
 }

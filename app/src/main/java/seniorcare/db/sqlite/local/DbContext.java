@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import seniorcare.db.context.IDbKeyTypePair;
 import seniorcare.db.context.IDbTableModelConvertible;
 import seniorcare.db.context.DataType;
 
@@ -19,10 +18,10 @@ import seniorcare.db.context.DataType;
 public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHelper {
     private T sample;
 
-    public DbContext(Context context) {
+    public DbContext(Context context, T sample) {
         super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
 
-        sample = getInstance();
+        this.sample = (T) sample.getNewInstance();
     }
 
     @Override
@@ -42,11 +41,11 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
     public long insertData(T newData) {
         SQLiteDatabase db = getWritableDatabase();
 
-        HashMap<String, String> allNewData = newData.getAllData();
+        HashMap<String, Object> allNewData = newData.getAllData();
         ContentValues values = new ContentValues();
         for (String key :
              allNewData.keySet()) {
-            values.put(key, allNewData.get(key));
+            values.put(key, allNewData.get(key).toString());
         }
         return db.insert(sample.getTableName(), null, values);
     }
@@ -58,11 +57,11 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
     }
 
     public List<T> searchData(T criteria) {
-        HashMap<String, String> allData = criteria.getAllData();
+        HashMap<String, Object> allData = criteria.getAllData();
         StringBuilder selectionQueryBuilder = null;
         List<String> selectionArgs = new ArrayList<>();
         for (String key : allData.keySet()) {
-            String value = allData.get(key);
+            String value = allData.get(key).toString();
             if (value == null || value == "") {
                 continue;
             }
@@ -83,11 +82,11 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
     }
 
     public int deleteData(T criteria) {
-        HashMap<String, String> allData = criteria.getAllData();
+        HashMap<String, Object> allData = criteria.getAllData();
         StringBuilder selectionQueryBuilder = null;
         List<String> selectionArgs = new ArrayList<>();
         for (String key : allData.keySet()) {
-            String value = allData.get(key);
+            String value = allData.get(key).toString();
             if (value == null || value == "") {
                 continue;
             }
@@ -110,12 +109,12 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
 
 
     public int updateData(T criteria, T newData) {
-        HashMap<String, String> allCriteriaData = criteria.getAllData();
+        HashMap<String, Object> allCriteriaData = criteria.getAllData();
 
         StringBuilder selectionQueryBuilder = null;
         List<String> selectionArgs = new ArrayList<>();
         for (String key : allCriteriaData.keySet()) {
-            String value = allCriteriaData.get(key);
+            String value = allCriteriaData.get(key).toString();
             if (value == null || value == "") {
                 continue;
             }
@@ -131,11 +130,11 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
             selectionArgs.add(value);
         }
 
-        HashMap<String, String> allNewData = newData.getAllData();
+        HashMap<String, Object> allNewData = newData.getAllData();
         ContentValues values = new ContentValues();
         for (String key :
                 allNewData.keySet()) {
-            values.put(key, allNewData.get(key));
+            values.put(key, allNewData.get(key).toString());
         }
 
         SQLiteDatabase db = getWritableDatabase();
@@ -143,11 +142,11 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
     }
 
     public long getId(T data) {
-        HashMap<String, String> allData = data.getAllData();
+        HashMap<String, Object> allData = data.getAllData();
         StringBuilder selectionQueryBuilder = null;
         List<String> selectionArgs = new ArrayList<>();
         for (String key : allData.keySet()) {
-            String value = allData.get(key);
+            String value = allData.get(key).toString();
             if (value == null || value == "") {
                 value = "null";
             }
@@ -183,16 +182,7 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
     }
 
     private T getInstance() {
-        Class<T> classT = null;
-
-        try {
-            return classT.newInstance();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return (T) sample.getNewInstance();
     }
 
     private void createTable(SQLiteDatabase db) {
@@ -202,15 +192,17 @@ public class DbContext<T extends IDbTableModelConvertible> extends SQLiteOpenHel
         queryBuilder.append(" (");
 
         queryBuilder.append(BaseColumns._ID);
-        queryBuilder.append("INTEGER PRIMARY KEY AUTOINCREMENT");
+        queryBuilder.append(" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL");
 
         HashMap<String, DataType> tableColumnsKeyTypePair = sample.getTableColumnsKeyType();
         for(String columnName : tableColumnsKeyTypePair.keySet()) {
-            queryBuilder.append(",");
+            queryBuilder.append(" ,");
             queryBuilder.append(columnName);
             queryBuilder.append(" ");
             queryBuilder.append(tableColumnsKeyTypePair.get(columnName));
         }
+
+        queryBuilder.append(")");
 
         db.execSQL(queryBuilder.toString());
     }

@@ -2,7 +2,9 @@ package com.example.seniorcare;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,20 +14,31 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements Button.OnClickListener
 {
     Button login, register;
-    final String CLICKEDBTNTAG = "CLICKEDBTN";
+    private static final String CLICKEDBTNTAG = "CLICKEDBTN";
+    private static final String TYPETAG = "TYPE";
+    private static final String PREFNAME = "seniorCarePref";
+    SharedPreferences seniorCareSharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        seniorCareSharedPref = getSharedPreferences(PREFNAME, Context.MODE_PRIVATE);
+        if (!seniorCareSharedPref.getString(TYPETAG, "").equals("")) {
+            if (seniorCareSharedPref.getString(TYPETAG, "").equals("General")) {
+                Intent mainIntent = new Intent(this, GeneralMenuActivity.class);
+                startActivity(mainIntent);
+            } else if (seniorCareSharedPref.getString(TYPETAG, "").equals("Senior")) {
+                Intent mainIntent = new Intent(this, SeniorMenuActivity.class);
+                startActivity(mainIntent);
+            }
+        }
 
         login = (Button) findViewById(R.id.loginButton);
         register = (Button) findViewById(R.id.registerButton);
 
-//        Intent authIntent = new Intent(this, GoogleMapsActivity.class);
-//        startActivity(authIntent);
-//        login.setOnClickListener(this);
-//        register.setOnClickListener(this);
+        login.setOnClickListener(this);
+        register.setOnClickListener(this);
     }
 
     @Override

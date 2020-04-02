@@ -10,11 +10,12 @@ import seniorcare.db.context.IDbTableModelConvertible;
 import seniorcare.db.context.DataType;
 
 public class User implements IDbTableModelConvertible {
-    private HashMap<String, Object> _data;
+    private HashMap<String, Object> _data = new HashMap<>();
     private final static String TABLE = "User";
     private final static String COLUMN_NAME = "Name";
     private final static String COLUMN_PASSWORD = "Password";
     private final static String COLUMN_ROLE_ID = "RoleId";
+    private final static String COLUMN_TYPE = "RoleId";
 
 
     public String getName() {
@@ -39,6 +40,14 @@ public class User implements IDbTableModelConvertible {
 
     public void setRoleId(long roleId) {
         _data.put(COLUMN_ROLE_ID, roleId);
+    }
+
+    public String getType() {
+        return (String) _data.get(COLUMN_ROLE_ID);
+    }
+
+    public void setType(String type) {
+        _data.put(COLUMN_ROLE_ID, type);
     }
 
     @Override
@@ -72,7 +81,12 @@ public class User implements IDbTableModelConvertible {
     }
 
     @Override
-    public HashMap<String, String> getAllData() {
-        return null;
+    public HashMap<String, Object> getAllData() {
+        return _data;
+    }
+
+    @Override
+    public Object getNewInstance() {
+        return new User();
     }
 }

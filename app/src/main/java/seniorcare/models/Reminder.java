@@ -10,7 +10,7 @@ import seniorcare.db.context.IDbTableModelConvertible;
 import seniorcare.db.context.DataType;
 
 public class Reminder implements IDbTableModelConvertible {
-    private HashMap<String, Object> _data;
+    private HashMap<String, Object> _data = new HashMap<>();
     private final static String TABLE = "Reminder";
     private final static String COLUMN_TITLE = "Title";
     private final static String COLUMN_TIME = "Time";
@@ -77,7 +77,12 @@ public class Reminder implements IDbTableModelConvertible {
     }
 
     @Override
-    public HashMap<String, String> getAllData() {
-        return null;
+    public HashMap<String, Object> getAllData() {
+        return _data;
+    }
+
+    @Override
+    public Object getNewInstance() {
+        return new Reminder();
     }
 }

@@ -4,41 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".TokenActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:paddingHorizontal="20dp"
-        android:background="@color/colorPrimary">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/welcomeTextView"
+            android:id="@+id/instructionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:text="@string/welcome_msg"
+            android:text="@string/qr_instruction"
             android:textColor="@android:color/white"
-            android:textSize="50dp" />
+            android:textSize="30dp" />
 
-        <Button
-            android:id="@+id/loginButton"
+        <TextView
+            android:id="@+id/tokenTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:text="@string/login_btn"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="20dp"/>
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/registerButton"
+            android:id="@+id/tokenFinishButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register_btn" />
+            android:text="@string/token_finish_button" />
+
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

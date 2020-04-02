@@ -8,27 +8,37 @@
     <!-- Auth Activity-->
     <string name="username_txt">Username: </string>
     <string name="password_txt">Password: </string>
+    <string name="phone_txt">Phone: </string>
     <string name="user_type_text">Please select user type:</string>
     <string name="general_radio">General</string>
     <string name="senior_radio">Senior</string>
     <string name="next_button">Next</string>
 
-    <!-- QR Activity -->
-    <string name="qr_instruction">Please scan the QR code to register him/her:</string>
+    <!-- Token Activity -->
+    <string name="qr_instruction">Please press "+" button in the main menu and enter the code to register him/her:</string>
+    <string name="token_finish_button">Finish</string>
 
     <!-- Menu Activity -->
     <string name="menu_title">Menu</string>
 
     <!-- General Menu Activity -->
+    <string name="location_row">View Seniors Location</string>
+    <string name="notification_row">View Notifications</string>
+    <string name="call_row">Make Emergency Call</string>
     <string-array name="general_menu_list_items">
         <item>View Senior Location</item>
         <item>Notification List</item>
     </string-array>
 
-    <!-- Set Notification Activity-->
+    <!-- Set Notification Activity -->
+    <string name="token_label">Input Token</string>
+    <string name="set_senior_finish_button">Finish</string>
+
+    <!-- Set Notification Activity -->
     <string name="title_label">Set Title/Content</string>
     <string name="time_label">Set Time</string>
-    <string name="senior_name_label">Senior name</string>
     <string name="set_notice_finish_button">Finish</string>
+
+    <!-- Google Map Activity -->
     <string name="title_activity_google_maps">Map</string>
 </resources>
