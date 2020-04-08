@@ -10,7 +10,7 @@
     <string name="password_txt">Password: </string>
     <string name="phone_txt">Phone: </string>
     <string name="user_type_text">Please select user type:</string>
-    <string name="general_radio">General</string>
+    <string name="young_radio">Young</string>
     <string name="senior_radio">Senior</string>
     <string name="next_button">Next</string>
 
@@ -20,6 +20,7 @@
 
     <!-- Menu Activity -->
     <string name="menu_title">Menu</string>
+    <string name="logout_btn">Logout</string>
 
     <!-- General Menu Activity -->
     <string name="location_row">View Seniors Location</string>
@@ -41,4 +42,7 @@
 
     <!-- Google Map Activity -->
     <string name="title_activity_google_maps">Map</string>
+
+    <!-- General Notification List Activity -->
+    <string name="title_general_notification_list">Notification List</string>
 </resources>

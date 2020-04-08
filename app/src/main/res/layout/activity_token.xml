@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TokenActivity">
+    tools:context=".activities.TokenActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,6 @@
             android:textColor="@android:color/white"
             android:textSize="30dp"
             android:textStyle="bold" />
-
         <Button
             android:id="@+id/tokenFinishButton"
             android:layout_width="match_parent"

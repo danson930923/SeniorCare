@@ -21,6 +21,7 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/NOTICE.md'
         exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/DEPENDENCIES'
         pickFirst 'META-INF/io.netty.versions.properties'
     }
     compileOptions {
@@ -39,4 +40,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.azure:azure-cosmos:4.0.0-preview.1'
+//    implementation 'com.amazonaws:aws-android-sdk-ddb-mapper:2.7.+'
+//    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.7.+'
+    implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.11.759'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.libraries.places:places:2.2.0'
 }

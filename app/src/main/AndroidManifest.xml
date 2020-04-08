@@ -9,7 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SetSeniorActivity"></activity>
+        <activity android:name=".activities.MessageActivity"></activity>
+        <activity android:name=".activities.SetSeniorActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -32,15 +35,15 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".GoogleMapsActivity"
+            android:name=".activities.GoogleMapsActivity"
             android:label="@string/title_activity_google_maps" />
-        <activity android:name=".SetNotificationActivity" />
-        <activity android:name=".GeneralNoticeListActivity" />
-        <activity android:name=".SeniorMenuActivity" />
-        <activity android:name=".GeneralMenuActivity" />
-        <activity android:name=".TokenActivity" />
-        <activity android:name=".AuthActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.SetNotificationActivity" />
+        <activity android:name=".activities.GeneralNoticeListActivity" />
+        <activity android:name=".activities.SeniorMenuActivity" />
+        <activity android:name=".activities.GeneralMenuActivity" />
+        <activity android:name=".activities.TokenActivity" />
+        <activity android:name=".activities.AuthActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
