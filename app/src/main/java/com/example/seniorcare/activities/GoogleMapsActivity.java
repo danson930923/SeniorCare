@@ -46,8 +46,6 @@ public class GoogleMapsActivity extends BaseActivity implements OnMapReadyCallba
                 sensorManager,
                 sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
         );
-
-        startLocationUpdates();
     }
 
     @Override
@@ -99,6 +97,7 @@ public class GoogleMapsActivity extends BaseActivity implements OnMapReadyCallba
                     .title("Current Location")
             );
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         }
     }
 

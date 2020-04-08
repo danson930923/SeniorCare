@@ -7,12 +7,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -44,7 +49,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements SensorEventListener {
 //    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static final String SENIOR_CARE_PREF_NAME = "seniorCarePref";
@@ -86,7 +91,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Context self = this;
 
         SqLiteLocalDbContext<User> userSqLiteLocalDbContext = new SqLiteLocalDbContext<>(this, new User());
         SqLiteLocalDbContext<ContactInfo> contactInfoSqLiteLocalDbContext = new SqLiteLocalDbContext<>(this, new ContactInfo());
@@ -119,57 +123,31 @@ public abstract class BaseActivity extends AppCompatActivity {
                 getApplicationContext()
         );
 
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-
-                    AccountService accountService = new AccountService(
-                            new SqLiteLocalDbContext<>(self, new User()),
-                            new SqLiteLocalDbContext<>(self, new UserPassCode()),
-                            new SqLiteLocalDbContext<>(self, new ContactInfo()),
-                            getSharedPreferences(SENIOR_CARE_PREF_NAME, Context.MODE_PRIVATE)
-                    );
-                    User currentUser = accountService.getCurrentUser();
-
-                    LocationService locationService = new LocationService(
-                            new SqLiteLocalDbContext<>(self, new LocationInfo())
-                    );
-                    LocationInfo locationInfo = new LocationInfo();
-                    locationInfo.setUserId(currentUser.getUserId());
-                    locationService.updateLocation(locationInfo);
-                }
-            }
-        };
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL)
-            .setMaxWaitTime(MAX_WAIT_TIME);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-
     }
 
     protected void startLocationUpdates() {
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                locationCallback,
-                Looper.getMainLooper());
-
         fetchLocation();
+        initMotionDetector();
+        registerMotionSensor();
     }
 
     protected void onFetchLocationSuccess(Location location) {
-        SqLiteLocalDbContext<LocationInfo> locationInfoSqLiteLocalDbContext = new SqLiteLocalDbContext<>(this, new LocationInfo());
+
+        AccountService accountService = new AccountService(
+                new SqLiteLocalDbContext<>(this, new User()),
+                new SqLiteLocalDbContext<>(this, new UserPassCode()),
+                new SqLiteLocalDbContext<>(this, new ContactInfo()),
+                getSharedPreferences(SENIOR_CARE_PREF_NAME, Context.MODE_PRIVATE)
+        );
         User currentUser = accountService.getCurrentUser();
+
+        LocationService locationService = new LocationService(
+                new SqLiteLocalDbContext<>(this, new LocationInfo())
+        );
         LocationInfo locationInfo = new LocationInfo();
         locationInfo.setUserId(currentUser.getUserId());
-        locationInfo.setLocationInfo(location);
+        locationService.updateLocation(locationInfo);
     }
 
     private void fetchLocation() {
@@ -180,12 +158,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         Task<Location> task = mFusedLocationClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                onFetchLocationSuccess(location);
-            }
-        });
+        task.addOnSuccessListener(location -> onFetchLocationSuccess(location));
     }
 
     @Override
@@ -195,6 +168,35 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void stopLocationUpdates() {
-        mFusedLocationClient.removeLocationUpdates(locationCallback);
+        unRegisterMotionSensor();
+    }
+
+
+    private Sensor linearAccelerationSensor;
+    private SensorManager sensorManager;
+    public void initMotionDetector() {
+        this.sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);;
+        this.linearAccelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+    }
+
+    public void registerMotionSensor() {
+        sensorManager.registerListener(this, linearAccelerationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void unRegisterMotionSensor() {
+        sensorManager.unregisterListener(this, linearAccelerationSensor);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        float[] values = sensorEvent.values;
+        if (Math.abs(values[0]) > 0.5 || Math.abs(values[1]) > 0.5 || Math.abs(values[2]) > 0.5) {
+            fetchLocation();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        // do nothing
     }
 }
