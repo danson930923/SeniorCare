@@ -63,6 +63,8 @@ public class SetNotificationActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        reminderService.removeReminder(reminder);
+
         String title = titleEditText.getText().toString();
         String time = timeEditText.getText().toString();
 
@@ -71,7 +73,6 @@ public class SetNotificationActivity extends BaseActivity implements View.OnClic
         reminder.setUserId(seniorUserId);
         reminder.setName(title);
 
-        reminderService.removeReminder(reminder);
         reminderService.addReminder(reminder);
 
         finish();

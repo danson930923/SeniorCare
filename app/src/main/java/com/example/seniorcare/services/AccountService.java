@@ -93,6 +93,7 @@ public class AccountService {
             return false;
         }
 
+        user = getUserById(user.getUserId());
         String userId = user.getUserId();
         UserPassCode userPassCodeSearch = new UserPassCode();
         userPassCodeSearch.setUserId(userId);

@@ -31,7 +31,7 @@ public class ManageUserService {
 
     public User getManagerUser(User user) {
         ManagedUserPair managedUserPair = new ManagedUserPair();
-        managedUserPair.setManagerId(user.getUserId());
+        managedUserPair.setManagedId(user.getUserId());
         String userId = managedUserPairSqLiteLocalDbContext.searchData(managedUserPair).get(0).getManagerId();
         User managedUser = userSqLiteLocalDbContext.getByPrimarykey(userId);
 

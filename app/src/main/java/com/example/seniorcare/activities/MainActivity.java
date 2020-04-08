@@ -1,7 +1,5 @@
 package com.example.seniorcare.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +14,8 @@ public class MainActivity extends BaseActivity implements Button.OnClickListener
 {
     Button login, register;
     private static final String CLICKEDBTNTAG = "CLICKEDBTN";
-    private static final String USERNAMETAG = "USERNAME";
+    private static final String USERNAME_TAG = "USERNAME";
+    private static final String TYPE_TAG = "TYPE";
     private static final String PREFNAME = "seniorCarePref";
     SharedPreferences seniorCareSharedPref;
 
@@ -26,11 +25,11 @@ public class MainActivity extends BaseActivity implements Button.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         seniorCareSharedPref = getSharedPreferences(PREFNAME, Context.MODE_PRIVATE);
-        if (!seniorCareSharedPref.getString(USERNAMETAG, "").equals("")) {
-            if (seniorCareSharedPref.getString(USERNAMETAG, "").equals("General")) {
+        if (!seniorCareSharedPref.getString(USERNAME_TAG, "").equals("")) {
+            if (seniorCareSharedPref.getString(TYPE_TAG, "").equals("General")) {
                 Intent mainIntent = new Intent(this, GeneralMenuActivity.class);
                 startActivity(mainIntent);
-            } else if (seniorCareSharedPref.getString(USERNAMETAG, "").equals("Senior")) {
+            } else if (seniorCareSharedPref.getString(TYPE_TAG, "").equals("Senior")) {
                 Intent mainIntent = new Intent(this, SeniorMenuActivity.class);
                 startActivity(mainIntent);
             }

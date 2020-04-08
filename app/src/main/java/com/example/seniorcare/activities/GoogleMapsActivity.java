@@ -77,9 +77,11 @@ public class GoogleMapsActivity extends BaseActivity implements OnMapReadyCallba
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(49.2487871,-122.885749);
+        LatLng sydney = new LatLng(0, 0);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        super.startLocationUpdates();
     }
 
     @Override

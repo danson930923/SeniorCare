@@ -160,6 +160,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                 locationCallback,
                 Looper.getMainLooper());
+
+        fetchLocation();
     }
 
     protected void onFetchLocationSuccess(Location location) {
@@ -181,7 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-
+                onFetchLocationSuccess(location);
             }
         });
     }

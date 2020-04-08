@@ -32,8 +32,6 @@ public class SeniorNoticeListAdapter extends RecyclerView.Adapter<SeniorNoticeLi
         public SeniorNoticeListViewHolder(LinearLayout noticeItemView) {
             super(noticeItemView);
             this.noticeItemView = noticeItemView;
-            stopImageButton = noticeItemView.findViewById(R.id.stopImageButton);
-            stopImageButton.setOnClickListener(this);
         }
 
         @Override
@@ -43,8 +41,6 @@ public class SeniorNoticeListAdapter extends RecyclerView.Adapter<SeniorNoticeLi
                     Context context = v.getContext();
                     Intent setNotificationIntent = new Intent(context, SetNotificationActivity.class);
                     context.startActivity(setNotificationIntent);
-                } else if (v.getId() == R.id.stopImageButton) {
-
                 } else {
                     throw new Exception("Button not found");
                 }

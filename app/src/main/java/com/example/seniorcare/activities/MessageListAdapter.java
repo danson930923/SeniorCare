@@ -26,8 +26,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         public MessageListViewHolder(LinearLayout noticeItemView) {
             super(noticeItemView);
             this.noticeItemView = noticeItemView;
-            stopImageButton = noticeItemView.findViewById(R.id.stopImageButton);
-            stopImageButton.setOnClickListener(this);
         }
 
         @Override
