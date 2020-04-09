@@ -72,7 +72,8 @@ public class SqLiteLocalDbContext<T extends IDbTableModelConvertible> extends SQ
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(sample.getTableName(), null, selectionQuery, selectionArgs.toArray(new String[0]), null, null, null);
-        return getDataList(cursor).get(0);
+        List<T> dataList = getDataList(cursor);
+        return (dataList == null || dataList.size() <= 0) ? null : dataList.get(0);
     }
 
 
@@ -122,6 +123,9 @@ public class SqLiteLocalDbContext<T extends IDbTableModelConvertible> extends SQ
     }
 
     public int deleteData(T criteria) {
+        if (criteria.getPrimaryKey() == null) {
+            return 0;
+        }
         String selectionQuery = criteria.getPrimaryKey() + " = ?";
         List<String> selectionArgs = new ArrayList<>();
         selectionArgs.add(criteria.getPrimaryKeyValue());

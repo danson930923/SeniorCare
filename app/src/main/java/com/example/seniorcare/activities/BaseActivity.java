@@ -1,23 +1,18 @@
 package com.example.seniorcare.activities;
 
 import android.Manifest;
-import android.accounts.Account;
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-import android.widget.Toast;
+import android.os.Message;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -35,18 +30,9 @@ import com.example.seniorcare.services.LocationService;
 import com.example.seniorcare.services.ManageUserService;
 import com.example.seniorcare.services.ReminderService;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 
 public abstract class BaseActivity extends AppCompatActivity implements SensorEventListener {
@@ -79,14 +65,12 @@ public abstract class BaseActivity extends AppCompatActivity implements SensorEv
      * Provides access to the Fused Location Provider API.
      */
     protected FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback locationCallback;
-
 
     protected AccountService accountService;
     protected ManageUserService managedUserService;
     protected ContactInfoService contactInfoService;
     protected ReminderService reminderService;
-    protected PlacesClient mGeoDataClient;
+    protected Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +108,16 @@ public abstract class BaseActivity extends AppCompatActivity implements SensorEv
         );
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                handleMessageAction(message);
+            }
+        };
+    }
+
+    protected void handleMessageAction(Message message) {
     }
 
     protected void startLocationUpdates() {

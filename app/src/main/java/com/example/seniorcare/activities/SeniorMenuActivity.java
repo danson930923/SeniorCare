@@ -1,22 +1,14 @@
 package com.example.seniorcare.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
@@ -25,19 +17,31 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.seniorcare.R;
+import com.example.seniorcare.models.Reminder;
 import com.example.seniorcare.models.User;
 
-import java.util.ArrayList;
+import org.joda.time.DateTime;
+
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
-import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SeniorMenuActivity extends BaseActivity implements View.OnClickListener {
+    private final static int REMINDER_TIME_REACH = 101;
 
     ImageButton makeCallButton;
     Button logoutButton;
     TextView tokenTextView;
     private static final int PERMISSIONS_REQUEST_CODE = 11;
+    private Timer timer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +72,21 @@ public class SeniorMenuActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onResume(){
         super.onResume();
+        scheduleReminderChecker();
     }
 
     @Override
     public void onClick(View v) {
         Toast.makeText(getApplicationContext(), "Here",Toast.LENGTH_SHORT).show();
-        User manager = managedUserService.getManagerUser(accountService.getCurrentUser());
-        String phonenumber = contactInfoService.getPhoneNumber(manager);
         if (v.getId() == R.id.callOutButton) {
+            User manager = managedUserService.getManagerUser(accountService.getCurrentUser());
+            if (manager == null) {
+                return;
+            }
+            String phonenumber = contactInfoService.getPhoneNumber(manager);
             makeCallService(phonenumber);
         } else if (v.getId() == R.id.logoutButton) {
+            timer.cancel();
             accountService.logout();
             finish();
         }
@@ -93,6 +102,59 @@ public class SeniorMenuActivity extends BaseActivity implements View.OnClickList
             Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "your number"));
             startActivity(callIntent);
         }
+    }
+
+    private void scheduleReminderChecker() {
+        timer.cancel();
+        timer = new Timer(true);
+        timer.schedule(
+                getScheduleReminderTimerTask(),
+                (60 - DateTime.now().getSecondOfDay() % 60) % 60,
+                1000 * 60
+        );
+    }
+
+    private void stopReminderChecker() {
+        timer.cancel();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        stopReminderChecker();
+    }
+
+    private TimerTask getScheduleReminderTimerTask() {
+        Context self = this;
+        return new TimerTask() {
+            @Override
+            public void run() {
+                List<Reminder> reminderList = reminderService.getReminders(accountService.getCurrentUser());
+                reminderList.forEach(reminder -> {
+                    DateTime reminderTime = new DateTime(reminder.getTime());
+                    DateTime currentTime = DateTime.now();
+                    if (currentTime.getMinuteOfDay() == reminderTime.getMinuteOfDay()) {
+                        handler.sendMessage(handler.obtainMessage(REMINDER_TIME_REACH, reminder));
+                    }
+                });
+            }
+        };
+    }
+
+    @Override
+    protected void handleMessageAction(Message message) {
+        switch (message.what) {
+            case REMINDER_TIME_REACH:
+                reminderAction((Reminder) message.obj);
+                break;
+        }
+    }
+
+    private void reminderAction(Reminder reminder) {
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(VibrationEffect.createOneShot(3000, VibrationEffect.DEFAULT_AMPLITUDE));
+        Toast.makeText(this, reminder.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
 //    protected void updateCurrentLocation(){

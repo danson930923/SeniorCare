@@ -63,17 +63,24 @@ public class SetNotificationActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        reminderService.removeReminder(reminder);
 
         String title = titleEditText.getText().toString();
         String time = timeEditText.getText().toString();
 
-        Reminder reminder = new Reminder();
-        reminder.setTime(time);
-        reminder.setUserId(seniorUserId);
-        reminder.setName(title);
+        Reminder newReminder = new Reminder();
+        newReminder.setTime(time);
+        newReminder.setUserId(seniorUserId);
+        newReminder.setName(title);
 
-        reminderService.addReminder(reminder);
+
+        if (reminder != null) {
+            newReminder.setUserId(reminder.getUserId());
+            reminderService.removeReminder(reminder);
+
+            reminder = newReminder;
+        }
+
+        reminderService.addReminder(newReminder);
 
         finish();
     }
